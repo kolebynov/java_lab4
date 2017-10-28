@@ -44,6 +44,32 @@ public class QueryCondition {
 	public List<QueryCondition> getConditions() {
 		return m_conditions;
 	}
+	public Query getParentQuery() {
+		return m_parentQuery;
+	}
+	public void setParentQuery(Query parentQuery) {
+		this.m_parentQuery = parentQuery;
+	}
+	
+	public Query IsEqual(ColumnQueryExpression columnExpression) {
+		setComparisonTypeAndRightExpression(ComparisonType.Equal, columnExpression);
+		return getParentQuery();
+	}
+	public Query Less(ColumnQueryExpression columnExpression) {
+		setComparisonTypeAndRightExpression(ComparisonType.Less, columnExpression);
+		return getParentQuery();
+	}
+	public Query Greater(ColumnQueryExpression columnExpression) {
+		setComparisonTypeAndRightExpression(ComparisonType.Greater, columnExpression);
+		return getParentQuery();
+	}
+	
+	protected void setComparisonTypeAndRightExpression(ComparisonType comparisonType, 
+			ColumnQueryExpression columnExpression) {
+		setComparisonType(comparisonType);
+		getRightExpressions().clear();
+		getRightExpressions().add(columnExpression);
+	}
 
 	private QueryConditionType m_type = QueryConditionType.CompareFilter;
 	private ComparisonType m_comparisonType;
@@ -52,4 +78,5 @@ public class QueryCondition {
 	private ArrayList<ColumnQueryExpression> m_rightExpressions = new ArrayList<>();
 	private boolean m_inverted = false;
 	private ArrayList<QueryCondition> m_conditions = new ArrayList<>();
+	private Query m_parentQuery;
 }

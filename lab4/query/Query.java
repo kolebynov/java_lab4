@@ -32,9 +32,27 @@ public abstract class Query extends BaseQuery {
 		setFrom(fromExpression);
 		return this;
 	}
+	public QueryCondition Where(String columnName, String sourceAlias) {
+		QueryCondition condition = getNewQueryCondition(new ColumnQueryExpression(columnName, sourceAlias));
+		getCondition().getConditions().add(condition);
+		return condition;
+	}
+	public QueryCondition And() {
+		return null;
+	}
+	public QueryCondition Or() {
+		return null;
+	}
 	
 	protected void setFrom(SourceQueryExpression fromExpression) {
 		setParameter(ExpressionNames.fromExpressionName, fromExpression);
+	}
+	protected QueryCondition getNewQueryCondition(ColumnQueryExpression columnExpression) {
+		QueryCondition condition = new QueryCondition() {{
+			setLeftExpression(columnExpression);
+		}};
+		condition.setParentQuery(this);
+		return condition;
 	}
 
 	private QueryCondition m_condition = new QueryCondition() {{

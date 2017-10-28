@@ -142,7 +142,7 @@ public class MSSqlSelectGenerator extends BaseMSSqlGenerator {
 		return appendAlias(sb, source.getAlias());
 	}
 	private StringBuilder appendCompareCondition(StringBuilder sb, QueryCondition condition) {
-		appendColumn(sb.append('('), condition.getLeftExpression())
+		appendColumn(sb.append(condition.isInverted() ? "not (" : '('), condition.getLeftExpression())
 			.append(' ' + getSqlCompareOperatorString(condition.getComparisonType()) + ' ');
 		return m_conditionRightExpressionSqlGenerators.get(condition.getComparisonType())
 			.apply(sb, condition.getRightExpressions()).append(')');
