@@ -1,5 +1,8 @@
 package lab4.query;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lab4.common.LogicalOperator;
 import lab4.common.QueryConditionType;
 import lab4.sqlGenerator.ISqlGenerator;
@@ -8,6 +11,7 @@ public abstract class Query extends BaseQuery {
 	public Query(ISqlGenerator sqlGenerator) {
 		super(sqlGenerator);
 		setParameter(ExpressionNames.queryConditionName, m_condition);
+		setParameter(ExpressionNames.joinExpressionsName, m_joins);
 	}
 	public Query() {
 		this(null);
@@ -16,9 +20,26 @@ public abstract class Query extends BaseQuery {
 	public QueryCondition getCondition() {
 		return m_condition;
 	}
+	public List<JoinExpression> getJoins() {
+		return m_joins;
+	}
+	public Query From(String tableName) {
+		return From(tableName, null);
+	}
+	public Query From(String tableName, String alias) {
+		SourceQueryExpression fromExpression = new SourceQueryExpression(tableName);
+		fromExpression.setAlias(alias);
+		setFrom(fromExpression);
+		return this;
+	}
+	
+	protected void setFrom(SourceQueryExpression fromExpression) {
+		setParameter(ExpressionNames.fromExpressionName, fromExpression);
+	}
 
 	private QueryCondition m_condition = new QueryCondition() {{
 		setType(QueryConditionType.FilterGroup);
 		setLogicalOperator(LogicalOperator.And);
 	}};
+	private ArrayList<JoinExpression> m_joins = new ArrayList<>();
 }
